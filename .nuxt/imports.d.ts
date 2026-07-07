@@ -36,4 +36,5 @@ export { useAuth } from '../app/composables/useAuth';
 export { useSidebar } from '../app/composables/useSidebar';
 export { confirmAction, confirmLogout, successAlert, errorAlert } from '../app/utils/swal';
 export { toastSuccess, toastError, toastWarning, toastInfo } from '../app/utils/toast';
+export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

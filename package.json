@@ -11,6 +11,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.9.0",
+    "@nuxtjs/color-mode": "^4.0.1",
     "lucide-vue-next": "^1.0.0",
     "nuxt": "^4.4.8",
     "sweetalert2": "^11.26.25",

@@ -2078,7 +2078,7 @@ async function errorHandler(error, event) {
   // H3 will handle fallback
 }
 
-const script = `
+const script$1 = `
 if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
   Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
     value: {},
@@ -2091,7 +2091,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
 const _AyaCc1dZ8xZt_EjZZWTeIbxo4OcSkT3qJrQRGCzsaQ = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
-    htmlContext.head.push(`<script>${script}<\/script>`);
+    htmlContext.head.push(`<script>${script$1}<\/script>`);
   });
 });
 
@@ -2200,9 +2200,18 @@ function onConsoleLog(callback) {
 	consola$1.wrapConsole();
 }
 
+const script = "\"use strict\";(()=>{const o=window,e=document.documentElement,c=[\"dark\",\"light\"],s=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"system\";let r=s===\"system\"?f():s;const l=e.getAttribute(\"data-color-mode-forced\");l&&(r=l),i(r),o[\"__NUXT_COLOR_MODE__\"]={preference:s,value:r,getColorScheme:f,addColorScheme:i,removeColorScheme:d};function i(t){const a=\"\"+t+\"\",n=\"\";e.classList?e.classList.add(a):e.className+=\" \"+a,n&&e.setAttribute(\"data-\"+n,t)}function d(t){const a=\"\"+t+\"\",n=\"\";e.classList?e.classList.remove(a):e.className=e.className.replace(new RegExp(a,\"g\"),\"\"),n&&e.removeAttribute(\"data-\"+n)}function u(t){return o.matchMedia(\"(prefers-color-scheme\"+t+\")\")}function f(){if(o.matchMedia&&u(\"\").media!==\"not all\"){for(const t of c)if(u(\":\"+t).matches)return t}return\"light\"}})();function getStorageValue(o,e){switch(o){case\"localStorage\":try{return window.localStorage.getItem(e)}catch{return null}case\"sessionStorage\":try{return window.sessionStorage.getItem(e)}catch{return null}case\"cookie\":try{return getCookie(e)}catch{return null}default:return null}}function getCookie(o){const c=(\"; \"+window.document.cookie).split(\"; \"+o+\"=\");if(c.length===2){const s=c.pop();return s?s.split(\";\").shift():null}}";
+
+const _F9bIfWaOXO8X_WjlJLlYt57ISJdXPBSJvh5HubEZ6s = (function(nitro) {
+  nitro.hooks.hook("render:html", (htmlContext) => {
+    htmlContext.head.push(`<script>${script}<\/script>`);
+  });
+});
+
 const plugins = [
   _AyaCc1dZ8xZt_EjZZWTeIbxo4OcSkT3qJrQRGCzsaQ,
 _s3KTSgIzK9tRiIPxHDt5mJF6aNw44Anfg2EcMCu4Eq4,
+_F9bIfWaOXO8X_WjlJLlYt57ISJdXPBSJvh5HubEZ6s,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 

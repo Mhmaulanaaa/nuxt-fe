@@ -8,12 +8,14 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
   ],
 
   css: [
     '~/assets/css/main.css'
   ],
+
   app: {
     head: {
       title: 'Nuxt 3 Tailwind CSS',

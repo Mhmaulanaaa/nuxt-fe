@@ -1,38 +1,70 @@
 <script setup lang="ts">
 import { Search, Plus, RefreshCcw, Pencil, Trash2 } from "lucide-vue-next";
+import BaseModal from "~/components/modal/BaseModal.vue";
+import BaseTable from "~/components/table/BaseTable.vue";
 
 const search = ref("");
 const openModal = ref(false);
+const files = ref<File[]>([]);
 
 const form = reactive({
   id: null,
+  nama: "",
   kode_poli: "",
   nama_poli: "",
+  tanggal: "",
   status: true,
+  status_multi: [],
 });
 
-const items = ref([
+const loading = ref(false);
+
+const data = ref([
   {
     id: 1,
-    kode_poli: "INT",
-    nama_poli: "Internis",
+    kode: "INT",
+    nama: "Internis",
     status: true,
   },
   {
     id: 2,
-    kode_poli: "BED",
-    nama_poli: "Bedah",
+    kode: "BED",
+    nama: "Bedah",
+    status: false,
+  },
+  {
+    id: 3,
+    kode: "IGD",
+    nama: "IGD",
+    status: true,
+  },
+  {
+    id: 4,
+    kode: "GIGI",
+    nama: "Gigi",
+    status: true,
+  },
+  {
+    id: 5,
+    kode: "MATA",
+    nama: "Mata",
+    status: false,
+  },
+  {
+    id: 6,
+    kode: "UMUM",
+    nama: "Umum",
     status: true,
   },
 ]);
 
 const columns = [
   {
-    accessorKey: "kode_poli",
+    accessorKey: "kode",
     header: "Kode Poli",
   },
   {
-    accessorKey: "nama_poli",
+    accessorKey: "nama",
     header: "Nama Poli",
   },
   {
@@ -41,7 +73,7 @@ const columns = [
   },
   {
     id: "action",
-    header: "Action",
+    header: "Aksi",
   },
 ];
 
@@ -72,7 +104,6 @@ const save = () => {
     </div>
 
     <!-- Search -->
-
     <div class="bg-white rounded-xl shadow p-5">
       <div class="flex gap-3">
         <div class="relative flex-1">
@@ -90,105 +121,27 @@ const save = () => {
         </button>
       </div>
     </div>
-
     <!-- Table -->
-
-    <div class="bg-white rounded-xl shadow overflow-hidden">
-      <table class="w-full">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="p-4">No</th>
-
-            <th class="p-4">Kode</th>
-
-            <th class="p-4">Nama Poli</th>
-
-            <th class="p-4">Status</th>
-
-            <th class="p-4 text-center">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            v-for="(item, index) in items"
-            :key="item.id"
-            class="border-t hover:bg-gray-50 text-center"
-          >
-            <td class="p-4">
-              {{ index + 1 }}
-            </td>
-
-            <td class="p-4">
-              {{ item.kode_poli }}
-            </td>
-
-            <td class="p-4">
-              {{ item.nama_poli }}
-            </td>
-
-            <td class="p-4">
-              <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                Aktif
-              </span>
-            </td>
-
-            <td class="p-4">
-              <div class="flex justify-center gap-2">
-                <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg">
-                  <Pencil :size="16" />
-                </button>
-
-                <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg">
-                  <Trash2 :size="16" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Modal -->
-
-    <UModal v-model:open="openModal" title="Tambah Data Poli">
-      <template #body>
-        <div class="space-y-4">
-          <div>
-            <label class="font-medium"> Kode Poli </label>
-
-            <input v-model="form.kode_poli" class="w-full rounded-xl border p-3 mt-2" />
-          </div>
-
-          <div>
-            <label class="font-medium"> Nama Poli </label>
-
-            <input v-model="form.nama_poli" class="w-full rounded-xl border p-3 mt-2" />
-          </div>
-
-          <div>
-            <label class="font-medium"> Status </label>
-
-            <select v-model="form.status" class="w-full rounded-xl border p-3 mt-2">
-              <option :value="true">Aktif</option>
-
-              <option :value="false">Tidak Aktif</option>
-            </select>
-          </div>
-        </div>
-      </template>
-
-      <template #footer>
-        <div class="flex justify-end gap-3">
-          <button @click="openModal = false" class="border rounded-xl px-5 py-2">
-            Batal
+    <BaseTable
+      :columns="columns"
+      :rows="data"
+      :loading="loading"
+      :skeleton="true"
+      searchable
+      show-pagination
+      :total="data.length"
+    >
+      <template #cell-action="{ row }">
+        <div class="flex items-center justify-center gap-5">
+          <button class="hover:text-indigo-600 bg-gray-100 rounded-lg p-2">
+            <Pencil :size="18" />
           </button>
 
-          <button @click="save" class="bg-indigo-600 text-white rounded-xl px-5 py-2">
-            Simpan
+          <button class="hover:text-red-600 bg-gray-100 rounded-lg p-2">
+            <Trash2 :size="18" />
           </button>
         </div>
       </template>
-    </UModal>
+    </BaseTable>
   </div>
 </template>
