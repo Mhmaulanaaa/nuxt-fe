@@ -85,7 +85,7 @@ onUnmounted(() => {
     >
       <div
         v-if="open"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 bg-opacity-50 p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
         @click.self="close"
       >
         <Transition
@@ -126,11 +126,29 @@ onUnmounted(() => {
 
             <!-- Footer -->
 
-            <div class="border-t px-6 py-6 flex justify-end gap-3">
+            <div
+              class="flex items-center justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-800"
+            >
               <slot name="footer">
-                <BaseButton variant="outline" @click="close"> Batal </BaseButton>
+                <!-- Tombol Batal -->
+                <button
+                  type="button"
+                  class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  @click="close"
+                >
+                  Batal
+                </button>
 
-                <BaseButton :loading="loading" @click="save"> Simpan </BaseButton>
+                <!-- Tombol Simpan -->
+                <button
+                  type="button"
+                  :disabled="loading"
+                  class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
+                  @click="save"
+                >
+                  <span v-if="loading">Menyimpan...</span>
+                  <span v-else>Simpan</span>
+                </button>
               </slot>
             </div>
           </div>

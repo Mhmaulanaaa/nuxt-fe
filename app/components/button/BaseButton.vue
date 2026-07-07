@@ -72,7 +72,11 @@ const classes = computed(() => {
 
 <template>
   <button :disabled="loading || disabled" :class="classes">
-    <Loader2 v-if="loading" class="animate-spin" :size="18" />
+    <Loader2 v-if="loading" class="h-4 w-4 animate-spin" />
+
+    <template v-else-if="$slots.leftIcon">
+      <slot name="leftIcon" />
+    </template>
 
     <slot />
 

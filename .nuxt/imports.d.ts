@@ -33,6 +33,7 @@ export { definePageMeta, PageMeta } from '#app/composables/pages';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { useApi } from '../app/composables/useApi';
 export { useAuth } from '../app/composables/useAuth';
+export { usePoli } from '../app/composables/usePoli';
 export { useSidebar } from '../app/composables/useSidebar';
 export { confirmAction, confirmLogout, successAlert, errorAlert } from '../app/utils/swal';
 export { toastSuccess, toastError, toastWarning, toastInfo } from '../app/utils/toast';

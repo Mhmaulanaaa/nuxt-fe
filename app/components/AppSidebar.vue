@@ -60,7 +60,7 @@ const menus = [
   </Transition>
 
   <aside
-    class="fixed left-0 top-0 h-screen bg-white border-r shadow-lg transition-all duration-300 z-50"
+    class="fixed left-0 top-0 h-screen bg-white border-r shadow-lg transition-all duration-300 z-20"
     :class="[
       isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
 
