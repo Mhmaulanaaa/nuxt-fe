@@ -10,13 +10,13 @@ export const confirmAction = async (text: string) => {
         cancelButtonText: "Tidak Yakin",
         reverseButtons: false,
         customClass: {
-            popup: "rounded-3xl p-1 m-2 text-xs px-5",
+            popup: "rounded-3xl p-5 m-5 text-xs px-5",
 
             actions: "flex gap-2 justify-center",
 
-            confirmButton: "bg-green-500 px-6 py-2 text-white rounded-lg",
+            confirmButton: "bg-indigo-600 px-6 py-2 text-white rounded-lg",
 
-            cancelButton: "bg-red-500 px-6 py-2 text-white rounded-lg",
+            cancelButton: "bg-gray-600 px-6 py-2 text-white rounded-lg",
         },
         buttonsStyling: false,
     });

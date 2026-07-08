@@ -28,7 +28,7 @@ export const usePoli = () => {
      * Create
      */
     const create = async (payload: any) => {
-        return await api(endpoint, {
+        return await api(`${endpoint}/create`, {
             method: "POST",
             body: payload,
         });
@@ -41,7 +41,7 @@ export const usePoli = () => {
         id: number | string,
         payload: any
     ) => {
-        return await api(`${endpoint}/${id}`, {
+        return await api(`${endpoint}/update/${id}`, {
             method: "PUT",
             body: payload,
         });
@@ -51,7 +51,7 @@ export const usePoli = () => {
      * Delete
      */
     const remove = async (id: number | string) => {
-        return await api(`${endpoint}/${id}`, {
+        return await api(`${endpoint}/delete/${id}`, {
             method: "DELETE",
         });
     };
@@ -59,12 +59,10 @@ export const usePoli = () => {
     /**
      * Search
      */
-    const search = async (keyword: string) => {
-        return await api(endpoint, {
+    const search = async (params = {}) => {
+        return await api(`${endpoint}/search`, {
             method: "GET",
-            query: {
-                keyword,
-            },
+            query: params,
         });
     };
 

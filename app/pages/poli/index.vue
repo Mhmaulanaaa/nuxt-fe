@@ -5,6 +5,8 @@ import BaseModal from "~/components/modal/BaseModal.vue";
 import BaseTable from "~/components/table/BaseTable.vue";
 import BaseButton from "~/components/button/BaseButton.vue";
 import BaseSelect from "~/components/base/BaseSelect.vue";
+import { toastSuccess, toastError, toastWarning } from "~/utils/toast";
+import { confirmAction, successAlert, errorAlert } from "~/utils/swal";
 
 useHead({
   title: "Master Poli",
@@ -14,15 +16,6 @@ definePageMeta({
 });
 
 const { getList, create, update, remove, getDetail, search, count } = usePoli();
-
-const loading = ref(false);
-
-const poli = ref<any[]>([]);
-const countPoli = ref({
-  total: 0,
-  aktif: 0,
-  nonaktif: 0,
-});
 
 async function loadDataCount() {
   try {
@@ -44,15 +37,171 @@ async function loadSelectPoli() {
 
     optionsPoli.value = response.data.map((item: any) => ({
       label: item.nama_poli,
-      value: item.poli_id,
+      value: item.kode_poli,
     }));
+    // console.log(optionsPoli.value);
   } catch (error) {
     console.error(error);
   }
 }
 
-const poliSearch = ref<number | null>(null);
-const statusSearch = ref<number | null>(null);
+async function loadData() {
+  try {
+    loading.value = true;
+
+    const response: any = await getList();
+
+    rows.value = response.data;
+    total.value = response.data.length;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function searchData() {
+  try {
+    loading.value = true;
+
+    const params: any = {};
+
+    if (keyword.value.trim()) {
+      params.keyword = keyword.value.trim();
+    }
+
+    if (poliSearch.value) {
+      params.kode_poli = poliSearch.value;
+    }
+    if (statusSearch.value !== null && statusSearch.value !== undefined) {
+      params.status = statusSearch.value;
+    }
+
+    const response: any = await search(params);
+
+    rows.value = response.data;
+    total.value = response.data.length;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function simpanData() {
+  try {
+    loading.value = true;
+
+    const payload = {
+      kode_poli: form.value.kode_poli,
+      nama_poli: form.value.nama_poli,
+      is_active: form.value.status,
+    };
+
+    if (isEdit.value) {
+      await update(selectedId.value!, payload);
+      toastSuccess("Data sukses diubah");
+    } else {
+      toastSuccess("Data sukses ditambah");
+      await create(payload);
+    }
+
+    showModal.value = false;
+
+    resetForm();
+
+    await refreshData();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+const selectedId = ref<number | null>(null);
+
+async function edit(row: any) {
+  try {
+    loading.value = true;
+
+    isEdit.value = true;
+
+    const response: any = await getDetail(row.poli_id);
+
+    selectedId.value = row.poli_id;
+
+    form.value = {
+      kode_poli: response.data.kode_poli,
+      nama_poli: response.data.nama_poli,
+      status: response.data.is_active,
+    };
+
+    showModal.value = true;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function hapusData(row: any) {
+  const result = await confirmAction(
+    `Apakah Anda yakin ingin menghapus poli "${row.nama_poli}"?`
+  );
+
+  if (!result.isConfirmed) return;
+
+  try {
+    loading.value = true;
+
+    await remove(row.poli_id);
+
+    await loadData();
+    await loadDataCount();
+    await loadSelectPoli();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    toastSuccess("Data sukses dihapus");
+    loading.value = false;
+  }
+}
+
+const loading = ref(false);
+const countPoli = ref({
+  total: 0,
+  aktif: 0,
+  nonaktif: 0,
+});
+const form = ref({
+  kode_poli: "",
+  nama_poli: "",
+  status: true,
+});
+
+function resetForm() {
+  form.value = {
+    kode_poli: "",
+    nama_poli: "",
+    status: true,
+  };
+
+  selectedId.value = null;
+}
+
+function tambahData() {
+  isEdit.value = false;
+  resetForm();
+  showModal.value = true;
+}
+
+async function refreshData() {
+  await Promise.all([loadData(), loadDataCount(), loadSelectPoli()]);
+}
+
+const keyword = ref("");
+const poliSearch = ref<string | null>(null);
+const statusSearch = ref<boolean | null>(null);
 const optionsPoli = ref([]);
 const options = [
   {
@@ -68,58 +217,19 @@ const options = [
     value: false,
   },
 ];
+async function resetSearch() {
+  keyword.value = "";
+  poliSearch.value = null;
+  statusSearch.value = null;
 
-onMounted(() => {
-  loadDataCount();
-  loadSelectPoli();
-});
-
-const form = ref({
-  kode_poli: "",
-  nama_poli: "",
-  status: true,
-});
-
-function resetForm() {
-  form.value = {
-    kode_poli: "",
-    nama_poli: "",
-    status: true,
-  };
+  await loadData();
 }
-
-const formEdit = ref({
-  kode_poli: "",
-  nama_poli: "",
-  status: true,
-});
-
-function tambahData() {
-  form.value.kode_poli = "";
-  form.value.nama_poli = "";
-  form.value.status = true;
-
-  resetForm();
-  showModal.value = false;
-}
-
-function simpanData() {
-  formEdit.value.kode_poli = "";
-  formEdit.value.nama_poli = "";
-  formEdit.value.status = true;
-
-  resetForm();
-  showEditModal.value = false;
-}
-
-const showModal = ref(false);
-const showEditModal = ref(false);
-const searchQuery = ref("");
+// Count dan Select and Search
 
 const page = ref(1);
 const pageSize = ref(10);
 const total = ref(3);
-const keyword = ref("");
+const rows = ref<any[]>([]);
 const columns = [
   {
     accessorKey: "kode_poli",
@@ -130,7 +240,7 @@ const columns = [
     header: "Nama Poli",
   },
   {
-    accessorKey: "status",
+    accessorKey: "is_active",
     header: "Status",
   },
   {
@@ -138,13 +248,15 @@ const columns = [
     header: "Aksi",
   },
 ];
-function edit(row: any) {
-  console.log("Edit", row);
-}
 
-function hapus(row: any) {
-  console.log("Delete", row);
-}
+onMounted(() => {
+  loadDataCount();
+  loadSelectPoli();
+  loadData();
+});
+
+const showModal = ref(false);
+const isEdit = ref(false);
 </script>
 
 <template>
@@ -196,14 +308,14 @@ function hapus(row: any) {
         class="w-1/3"
       />
       <div class="flex flex-wrap items-center gap-2">
-        <BaseButton variant="primary" @click="loadData">
+        <BaseButton variant="primary" @click="searchData">
           <template #leftIcon>
             <Search :size="18" />
           </template>
           Cari
         </BaseButton>
 
-        <BaseButton variant="secondary" @click="loadData">
+        <BaseButton variant="secondary" @click="resetSearch">
           <template #leftIcon>
             <RefreshCcw :size="18" />
           </template>
@@ -222,7 +334,7 @@ function hapus(row: any) {
       >
         Daftar Poli
       </h1>
-      <BaseButton variant="primary" size="sm" @click="showModal = true">
+      <BaseButton variant="primary" size="sm" @click="tambahData()">
         Tambah Poli
       </BaseButton>
     </div>
@@ -242,7 +354,7 @@ function hapus(row: any) {
         @row-click="console.log"
       >
         <!-- Status -->
-        <template #cell-status="{ value }">
+        <template #cell-is_active="{ value }">
           <span
             :class="
               value
@@ -264,15 +376,19 @@ function hapus(row: any) {
               <Pencil :size="16" />
             </button>
 
-            <button class="rounded-lg bg-red-500 p-2 text-white" @click.stop="hapus(row)">
+            <button
+              class="rounded-lg bg-red-500 p-2 text-white"
+              @click.stop="hapusData(row)"
+            >
               <Trash2 :size="16" />
             </button>
           </div>
         </template>
       </BaseTable>
+      <!-- Modal -->
       <BaseModal
         v-model="showModal"
-        title="Tambah Data Poli"
+        :title="isEdit ? 'Edit Data Poli' : 'Tambah Data Poli'"
         size="md"
         @save="simpanData"
       >

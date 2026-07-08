@@ -579,38 +579,47 @@ defineExpose({
 
       <div v-if="showPagination" class="flex items-center gap-2">
         <div class="flex items-center gap-2">
-          <button @click="changePage(page - 1)" class="rounded-lg border px-3 py-1">
+          <!-- Previous -->
+          <button
+            @click="changePage(page - 1)"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-1 text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
             ‹
           </button>
 
+          <!-- Number -->
           <button
             v-for="p in totalPages"
             :key="p"
             @click="changePage(p)"
             :class="[
-              'rounded-lg px-3 py-1 text-sm',
+              'rounded-lg border px-3 py-1 text-sm transition-colors',
 
               page === p
-                ? 'bg-indigo-600 text-white'
-                : 'border hover:bg-gray-50 dark:border-slate-700',
+                ? 'border-indigo-600 bg-indigo-600 text-white'
+                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800',
             ]"
           >
             {{ p }}
           </button>
 
-          <button @click="changePage(page + 1)" class="rounded-lg border px-3 py-1">
+          <!-- Next -->
+          <button
+            @click="changePage(page + 1)"
+            class="rounded-lg border border-gray-300 bg-white px-3 py-1 text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
             ›
           </button>
         </div>
 
-        <span class="text-sm text-gray-500">
-          {{ page }}
-          /
-          {{ totalPages }}
+        <!-- Info -->
+        <span class="text-sm text-gray-500 dark:text-slate-400">
+          {{ page }} / {{ totalPages }}
         </span>
 
+        <!-- Next Button -->
         <button
-          class="rounded-lg border px-3 py-1 text-sm hover:bg-gray-50 dark:border-slate-700 dark:hover:bg-slate-800"
+          class="rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
           @click="changePage(page + 1)"
         >
           Next

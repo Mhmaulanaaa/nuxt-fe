@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { User, Settings, KeyRound, LogOut, ChevronDown } from "lucide-vue-next";
+import { toastSuccess, toastError, toastWarning } from "~/utils/toast";
+import { confirmAction, successAlert, errorAlert } from "~/utils/swal";
 
 const dropdown = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
@@ -40,42 +42,43 @@ onBeforeUnmount(() => {
 const handleLogout = async () => {
   dropdown.value = false;
   await logout();
+
+  toastSuccess("Logout berhasil");
 };
 </script>
 
 <template>
   <div ref="dropdownRef" class="relative">
     <!-- Button -->
-
     <button
       @click="dropdown = !dropdown"
-      class="flex items-center gap-3 rounded-xl px-2 py-1.5 hover:bg-gray-100 transition"
+      class="flex items-center gap-3 rounded-xl px-2 py-1.5 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-slate-800"
     >
       <!-- Avatar -->
-
       <div
-        class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white"
       >
         {{ initials }}
       </div>
 
       <!-- User -->
-
-      <div class="hidden md:block text-left">
-        <div class="font-semibold text-sm">
+      <div class="hidden text-left md:block">
+        <div class="text-sm font-semibold text-gray-800 dark:text-white">
           {{ user?.name }}
         </div>
 
-        <div class="text-xs text-gray-500">
+        <div class="text-xs text-gray-500 dark:text-slate-400">
           {{ user?.role ?? "Administrator" }}
         </div>
       </div>
 
-      <ChevronDown class="hidden md:block" :size="18" />
+      <ChevronDown
+        :size="18"
+        class="hidden text-gray-500 transition dark:text-slate-400 md:block"
+      />
     </button>
 
     <!-- Dropdown -->
-
     <Transition
       enter-active-class="transition duration-200"
       enter-from-class="opacity-0 scale-95"
@@ -86,20 +89,19 @@ const handleLogout = async () => {
     >
       <div
         v-if="dropdown"
-        class="absolute right-0 mt-3 w-72 rounded-2xl bg-white shadow-2xl border overflow-hidden z-50"
+        class="absolute right-0 z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900"
       >
         <!-- Header -->
-
-        <div class="p-5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-5 text-white">
           <div class="flex items-center gap-4">
             <div
-              class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-xl font-bold"
+              class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-xl font-bold"
             >
               {{ initials }}
             </div>
 
             <div>
-              <div class="font-semibold text-lg">
+              <div class="text-lg font-semibold">
                 {{ user?.name }}
               </div>
 
@@ -107,7 +109,7 @@ const handleLogout = async () => {
                 {{ user?.nip }}
               </div>
 
-              <div class="inline-flex mt-2 rounded-full bg-white/20 px-3 py-1 text-xs">
+              <div class="mt-2 inline-flex rounded-full bg-white/20 px-3 py-1 text-xs">
                 {{ user?.role || "Administrator" }}
               </div>
             </div>
@@ -115,48 +117,43 @@ const handleLogout = async () => {
         </div>
 
         <!-- Menu -->
-
         <div class="p-2">
           <NuxtLink
             to="/profile"
-            class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-gray-100"
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-700 transition hover:bg-gray-100 hover:text-indigo-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <User :size="18" />
-
-            Profile
+            <span>Profile</span>
           </NuxtLink>
 
           <NuxtLink
             to="/settings"
-            class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-gray-100"
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-700 transition hover:bg-gray-100 hover:text-indigo-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <Settings :size="18" />
-
-            Settings
+            <span>Settings</span>
           </NuxtLink>
 
           <NuxtLink
             to="/change-password"
-            class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-gray-100"
+            class="flex items-center gap-3 rounded-xl px-4 py-3 text-gray-700 transition hover:bg-gray-100 hover:text-indigo-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <KeyRound :size="18" />
-
-            Change Password
+            <span>Change Password</span>
           </NuxtLink>
         </div>
 
-        <div class="border-t" />
+        <!-- Divider -->
+        <div class="border-t border-gray-200 dark:border-slate-700" />
 
         <!-- Logout -->
-
         <div class="p-2">
           <button
             @click="handleLogout"
-            class="w-full rounded-xl px-4 py-3 flex items-center gap-3 text-red-600 hover:bg-red-50"
+            class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
           >
             <LogOut :size="18" />
-
-            Logout
+            <span>Logout</span>
           </button>
         </div>
       </div>

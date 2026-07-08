@@ -68,7 +68,11 @@ const value = computed({
           'dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20',
         ]"
       >
-        <option disabled value="">
+        <option
+          v-if="value === null || value === '' || value === undefined"
+          disabled
+          :value="null"
+        >
           {{ placeholder }}
         </option>
 
