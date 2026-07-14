@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import { X } from "lucide-vue-next";
 
 interface Props {
@@ -28,7 +28,6 @@ const close = () => {
   if (props.persistent) return;
 
   open.value = false;
-
   emit("close");
 };
 
@@ -76,8 +75,8 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <Transition
-      enter-active-class="transition duration-200"
-      leave-active-class="transition duration-150"
+      enter-active-class="transition duration-300 ease-out"
+      leave-active-class="transition duration-200 ease-in"
       enter-from-class="opacity-0"
       enter-to-class="opacity-100"
       leave-from-class="opacity-100"
@@ -85,68 +84,100 @@ onUnmounted(() => {
     >
       <div
         v-if="open"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/70 backdrop-blur-sm p-4 transition-colors duration-300"
         @click.self="close"
       >
         <Transition
-          enter-active-class="transition duration-200"
-          leave-active-class="transition duration-150"
-          enter-from-class="scale-95 opacity-0"
-          enter-to-class="scale-100 opacity-100"
-          leave-from-class="scale-100 opacity-100"
-          leave-to-class="scale-95 opacity-0"
+          enter-active-class="transition-all duration-300 ease-out"
+          leave-active-class="transition-all duration-200 ease-in"
+          enter-from-class="opacity-0 scale-95 translate-y-2"
+          enter-to-class="opacity-100 scale-100 translate-y-0"
+          leave-from-class="opacity-100 scale-100 translate-y-0"
+          leave-to-class="opacity-0 scale-95 translate-y-2"
         >
           <div
             v-if="open"
             :class="[
-              'bg-white shadow-2xl w-full overflow-hidden flex flex-col',
+              'w-full overflow-hidden flex flex-col shadow-2xl border transition-all duration-300',
+              'bg-white dark:bg-slate-900',
+              'border-gray-200 dark:border-slate-700',
+              'text-slate-900 dark:text-slate-100',
               modalWidth,
               size !== 'fullscreen' ? 'rounded-2xl' : '',
             ]"
           >
             <!-- Header -->
-
-            <div class="border-b px-6 py-4 flex items-center justify-between">
+            <div
+              class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 transition-colors duration-300"
+            >
               <slot name="header">
-                <h2 class="text-lg font-semibold">
+                <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
                   {{ title }}
                 </h2>
               </slot>
 
-              <button class="rounded-lg p-2 hover:bg-gray-100" @click="close">
+              <button
+                class="rounded-xl p-2 text-slate-500 hover:bg-gray-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-all"
+                @click="close"
+              >
                 <X :size="20" />
               </button>
             </div>
 
             <!-- Body -->
-
-            <div class="p-6 overflow-auto flex-1">
+            <div
+              class="flex-1 overflow-auto p-6 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 transition-colors duration-300"
+            >
               <slot />
             </div>
 
             <!-- Footer -->
-
             <div
-              class="flex items-center justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-800"
+              class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 transition-colors duration-300"
             >
               <slot name="footer">
-                <!-- Tombol Batal -->
+                <!-- Batal -->
                 <button
                   type="button"
-                  class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  class="rounded-xl px-5 py-2.5 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 transition-all duration-200"
                   @click="close"
                 >
                   Batal
                 </button>
 
-                <!-- Tombol Simpan -->
+                <!-- Simpan -->
                 <button
                   type="button"
                   :disabled="loading"
-                  class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
+                  class="rounded-xl px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
                   @click="save"
                 >
-                  <span v-if="loading">Menyimpan...</span>
+                  <span v-if="loading" class="flex items-center gap-2">
+                    <svg
+                      class="w-4 h-4 animate-spin"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      />
+
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+
+                    Menyimpan...
+                  </span>
+
                   <span v-else>Simpan</span>
                 </button>
               </slot>

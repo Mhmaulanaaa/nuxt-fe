@@ -9,6 +9,8 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
+  Hospital,
+  Pill,
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -23,8 +25,13 @@ const menus = [
   },
   {
     title: "Poli",
-    icon: Building2,
+    icon: Hospital,
     to: "/poli",
+  },
+  {
+    title: "Obat",
+    icon: Pill,
+    to: "/obat",
   },
   {
     title: "Users",

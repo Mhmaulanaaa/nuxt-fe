@@ -39,12 +39,17 @@ const value = computed({
 
 <template>
   <div class="space-y-2">
-    <label v-if="label" class="block text-sm font-semibold text-gray-700">
+    <!-- Label -->
+    <label
+      v-if="label"
+      class="block text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors"
+    >
       {{ label }}
 
-      <span v-if="required" class="text-red-500"> * </span>
+      <span v-if="required" class="text-red-500">*</span>
     </label>
 
+    <!-- Input -->
     <div class="relative">
       <slot name="prefix" />
 
@@ -55,26 +60,36 @@ const value = computed({
         :placeholder="placeholder"
         :disabled="disabled"
         :readonly="readonly"
-        class="w-full rounded-xl border bg-white px-4 py-2.5 outline-none transition-all duration-200"
+        class="w-full rounded-xl border px-4 py-2.5 text-sm outline-none transition-all duration-200 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
         :class="[
           error
-            ? 'border-red-500 focus:ring-2 focus:ring-red-200'
-            : 'border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200',
-          disabled ? 'bg-gray-100 cursor-not-allowed' : '',
-          readonly ? 'bg-gray-50' : '',
+            ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/15'
+            : 'border-gray-300 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/15',
+
+          disabled
+            ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed'
+            : '',
+
+          readonly ? 'bg-gray-50 dark:bg-slate-800' : '',
         ]"
       />
 
       <slot name="suffix" />
     </div>
 
-    <p v-if="hint && !error" class="text-xs text-gray-500">
+    <!-- Hint -->
+    <p
+      v-if="hint && !error"
+      class="text-xs text-slate-500 dark:text-slate-400 transition-colors"
+    >
       {{ hint }}
     </p>
 
-    <div v-if="error" class="flex items-center gap-1 text-red-500 text-xs">
+    <!-- Error -->
+    <div v-if="error" class="flex items-center gap-1.5 text-xs text-red-500">
       <CircleAlert :size="14" />
-      {{ error }}
+
+      <span>{{ error }}</span>
     </div>
   </div>
 </template>

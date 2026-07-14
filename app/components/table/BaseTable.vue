@@ -116,7 +116,7 @@ const props = withDefaults(defineProps<Props>(), {
 
   searchable: false,
 
-  searchPlaceholder: "Cari data...",
+  // searchPlaceholder: "Cari data...",
 
   showPagination: false,
 
@@ -358,11 +358,10 @@ defineExpose({
     <!-- =========================
          TOOLBAR
     ========================== -->
-    <div
+    <!-- <div
       v-if="searchable || $slots.toolbar"
       class="flex flex-col gap-3 border-b border-gray-100 px-4 py-4 dark:border-slate-700 md:flex-row md:items-center md:justify-between"
     >
-      <!-- Search -->
       <div v-if="searchable" class="relative w-full md:max-w-sm">
         <svg
           class="absolute left-3 top-3 h-4 w-4 text-gray-400"
@@ -387,11 +386,10 @@ defineExpose({
         />
       </div>
 
-      <!-- Custom Toolbar -->
       <div v-if="$slots.toolbar" class="flex items-center gap-2">
         <slot name="toolbar" />
       </div>
-    </div>
+    </div> -->
 
     <!-- =========================
          LOADING OVERLAY
